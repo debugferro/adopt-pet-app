@@ -1,0 +1,115 @@
+<div class="m-4">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-6 col-lg-6 border rounded border-secondary p-3">
+      <% if @pet.photo.attached? %>
+        <%= cl_image_tag @pet.photo.key, height: 300, width: 400, crop: :fill, :class => "w-100"%>
+      <% end %>
+      <div>
+        <%= link_to "Pet post by #{@pet.user.first_name} #{@pet.user.last_name}", user_path(@pet.user) %>
+      </div>
+      <div>
+        <p>
+          Species:
+          <%= @pet.species.capitalize %>
+        </p>
+      </div>
+      <div>
+        <p>Name:<%= @pet.name %>
+        <% if @pet.adopted %>
+          <strong>(ADOPTED) </strong>
+        <% end %>
+        </p>
+       </div>
+       <div>
+         <p>
+           Found on: <%= @pet.found_date.to_time.strftime('%B %e of %Y') %>
+         </p>
+       </div>
+       <div>
+         <p>
+           Description: <%= @pet.description %>
+         </p>
+       </div>
+        <div>
+        <p>
+          Breed: <%= @pet.breed %>
+        </p>
+      </div>
+      <div>
+        <p>
+          Size: <%= @pet.size.capitalize %>
+        </p>
+      </div>
+      <div>
+        <p>
+          Age: <%= @pet.age.capitalize %>
+        </p>
+      </div>
+      <div>
+          <p>
+          City: <%= @pet.city %>
+          /
+          State: <%= @pet.state %>
+          </p>
+        </div>
+        <div>
+          <p>
+            Neighborhood:
+            <%= @pet.neighborhood %>
+          </p>
+        </div>
+
+        <% unless policy(@pet).update? || policy(@pet).show_message_link? %>
+        <% unless @pet.adopted %>
+          <%= simple_form_for [@pet, @request] do |f| %>
+          <%= f.button :submit, class: "btn btn-primary p-3" %>
+          <% end %>
+        <% end %>
+        <% end %>
+
+      <!-- Displaying the request messages for the requester -->
+      <% if policy(@pet).show_message_link? %>
+        <p>
+          <%= "You made a request to adopt #{@pet.name} in #{@created_at}"%>
+        <p>
+      <!-- Displaying information about when the adoption happened -->
+        <% if @my_request.finished %>
+          <p>
+            <%= "Your request to adopt was accepted by #{@pet.user.first_name} in #{@updated_at}" %>
+          </p>
+          <% end %>
+        <%= link_to "See Request Messages", request_messages_path(@request_link.ids), class: "btn btn-secondary" %>
+      <% end %>
+
+      <% if @pet.adopted %>
+        <p><strong><%= @pet.name %> was adopted by
+          <%= link_to "#{@who_adopted.first_name} #{@who_adopted.last_name}", user_path(@who_adopted) %>
+          in <%= @when_adopted %>
+        </strong></p>
+      <% end %>
+
+      <!-- Displaying all the requests for pet owner -->
+        <% if policy(@pet).list_requests? %>
+          <h1><%= pluralize @pet.requests.size, "Request" %> to adopt <%= @pet.name %>:</h1>
+          <% @requests.each do |request| %>
+            <% claimant_name = "#{request.user.first_name} #{request.user.last_name}" %>
+            <p>Request of <%= claimant_name %>:</p>
+            <%= link_to "Talk to #{claimant_name}", request_messages_path(request.id), class: "btn btn-secondary" %>
+          <% end %>
+        <% end %>
+
+      </div>
+    </div>
+    <div class="row justify-content-center">
+
+      <%= link_to "<< Back", root_path, class: "btn btn-secondary" %>
+
+    <!-- Displaying Edit and Delete buttons for pet owner -->
+      <% if policy(@pet).update? %>
+        <%= link_to "Edit", edit_pet_path(@pet), class: "btn btn-secondary" %>
+        <% message = "Are you sure? It cannot be reversed" %>
+        <%= link_to "Delete", pet_path(@pet), method: :delete, data: { confirm: message }, class: "btn btn-secondary" %>
+      <% end %>
+
+    </div>
+  </div>

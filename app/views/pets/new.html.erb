@@ -1,0 +1,31 @@
+<div class="m-4">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-6 col-lg-6 border rounded border-secondary p-3">
+      <%= simple_form_for @pet do |f| %>
+        <%= f.input :name %>
+        <%= f.input :photo, as: :file %>
+        <%= f.input :found_date %>
+        <%= f.input :description, as: :text %>
+        <% species = [['Dog', 'Dog'], ['Cat', 'Cat'], ['Bird', 'Bird'] , %>
+                  <% ['Fish', 'Fish'], ['Frog', 'Frog'], ['Hasmter', 'Hamster'], %>
+                  <% ['Lizard', 'Lizard']] %>
+        <%= f.label :species %>
+        <%= f.select :species, species %>
+        <%= f.input :breed %>
+        <% sizes = [['Small', 'Small'], ['Mid-sized', 'Mid-Sized'], ['Big', 'Big']] %>
+        <%= f.label :size %>
+        <%= f.select :size, sizes %>
+        <% ages = [['Puppy', 'Puppy'], ['Juvenile', 'Juvenile'], ['Adult', 'Adult']] %>
+        <%= f.label :age %>
+        <%= f.select :age, ages %>
+        <%= f.input :state %>
+        <%= f.input :city %>
+        <%= f.input :neighborhood %>
+        <div class="row justify-content-center">
+          <%= f.submit :class => "btn btn-success" %>
+        </div>
+      <% end %>
+
+    </div>
+  </div>
+</div>

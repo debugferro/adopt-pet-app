@@ -1,0 +1,46 @@
+<% unless @messages.nil? %>
+<div class="m-3">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-6 col-lg-6 border rounded border-secondary p-3">
+  <p>Chat
+    <% if current_user == @request.user %>
+    (<%= current_user.first_name %> => <%= @request.pet.user.first_name %>)
+    <% else %>
+    (<%= current_user.first_name %> => <%= @request.user.first_name %>)
+    <% end %>
+  </p>
+
+<% if policy(@request.pet).update? %>
+  <%= simple_form_for @request.pet, url: pet_path(@request.pet), method: :patch do |f| %>
+    <%= f.input :adopted, as: :hidden, input_html: { value: true }  %>
+    <%= f.input :finished, as: :hidden, input_html: { value: @request.id }  %>
+    <%= f.submit "Accept Request", data: { confirm: "Are you sure?" } %>
+  <% end %>
+<% end %>
+  <hr>
+
+  <% @messages.each do |message| %>
+    <p><h1><%=  "#{message.user.first_name} #{message.user.last_name} says:"  %></h1>
+    <p><%= message.created_at.to_time.strftime('%B %e at %l:%M %p') %></p>
+    <%= message.content %></p>
+    <hr>
+  <% end %>
+
+  <% if @messages.count == 0 %>
+    <p>Welcome to the chat! This is the place for you to know more about <%= @request.pet.name %>. Say hello! =)</p>
+  <% end %>
+
+  <%= simple_form_for Message.new, url: "/requests/#{@request.id}/messages" do |f| %>
+    <%= f.input :content, as: :text %>
+    <%= f.submit %>
+  <% end %>
+
+  <%= link_to "<< Back", pet_path(@request.pet.id) %>
+    </div>
+  </div>
+</div>
+<% else %>
+  <h1>OOOOOPS! SOMETHING IS WRONG :O</h1>
+  <p>You don't have the necessary authorization, you can't access this page!</p>
+  <%= link_to "Homepage", root_path, class: "btn btn-secondary" %>
+<% end %>

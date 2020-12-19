@@ -1,0 +1,26 @@
+<div class="container mt-3">
+      <div class="row justify-content-center m-4">
+        <%= link_to "Post a pet", new_pet_path, :class => "btn btn-primary w-75 p-3"%>
+      </div>
+  <div class="container">
+    <% @pets.each do |pet| %>
+    <div class="card hover">
+      <div class="card-img" style="background-image: url(<%= cl_image_path pet.photo.key if pet.photo.attached? %>)">
+        <div class="overlay">
+          <div class="overlay-content">
+            <a class="hover" href="<%= pet_path(pet) %>">Read More</a>
+          </div>
+        </div>
+      </div>
+      <div class="card-content">
+        <a href="<%= pet_path(pet) %>">
+          <h2><%= pet.name %></h2>
+          <p><%= pet.description.truncate(150) %></p>
+        </a>
+      </div>
+    </div>
+    <% end %>
+
+
+  </div>
+</div>

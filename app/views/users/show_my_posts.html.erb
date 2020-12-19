@@ -1,0 +1,40 @@
+<% unless @user.nil? %>
+  <h1>My Pets for Adoption</h1>
+  <hr>
+  <% @pets&.each do |pet| %>
+    <h3><%= pet.name %>
+    <%= link_to "Open Adoption Post", pet_path(pet), class: "btn btn-secondary" %>
+    <% if pet.adopted %>
+      (Adopted!)
+    </h3>
+    <%= cl_image_tag pet.photo.key, height: 300, width: 400, crop: :fill %>
+      <% @requests.where(pet_id: pet).each do |request| %>
+        <% first_name = request.user.first_name %>
+        <% last_name = request.user.last_name %>
+        <p><%= "Adopted By #{first_name} #{last_name}" %></p>
+        <%= link_to "#{first_name} #{last_name}'s Profile", user_path(request.user), class: "btn btn-secondary" %>
+        <%= link_to "Chat with #{first_name} #{last_name}", request_messages_path(request), class: "btn btn-secondary" %>
+        <hr>
+      <% end %>
+    <% else %>
+      <%= link_to "Edit Post", edit_pet_path(pet), class: "btn btn-secondary" %>
+      <h3>(Available)</h3>
+      <%= cl_image_tag pet.photo.key, height: 300, width: 400, crop: :fill %>
+      <h3>
+        <%= pluralize pet.requests.size, "Request" %>
+      </h3>
+      <% pet&.requests.each do |request| %>
+        <% first_name = request.user.first_name %>
+        <% last_name = request.user.last_name %>
+        <p><%= "By #{first_name} #{last_name}" %></p>
+        <%= link_to "#{first_name} #{last_name}'s Profile", user_path(request.user), class: "btn btn-secondary" %>
+        <%= link_to "Chat with #{first_name} #{last_name}", request_messages_path(request), class: "btn btn-secondary" %>
+        <hr>
+      <% end %>
+    <% end %>
+  <% end %>
+<% else %>
+  <h1>OOOOOPS! SOMETHING IS WRONG :O</h1>
+  <p>You don't have the necessary authorization, you can't access this page!</p>
+  <%= link_to "Homepage", root_path, class: "btn btn-secondary" %>
+<% end %>

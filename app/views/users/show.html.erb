@@ -1,0 +1,39 @@
+<div class="m-4">
+    <div class="row justify-content-center">
+      <div class="col-12 col-md-6 col-lg-6 border rounded border-secondary p-3">
+<h1><%= @user.first_name.capitalize %> <%= @user.last_name.capitalize %></h1>
+<% if @user.photo.attached? %>
+  <%= cl_image_tag @user.photo.key, height: 300, width: 400, crop: :fill %>
+<% end %>
+<p>Birthday:
+  <%= @user.birth_date.to_time.strftime('%B %e of %Y') %>
+</p>
+<p>
+  About me:
+  <%= @user.about_me %>
+</p>
+<p>
+  Adoptions:
+  <%= @user.requests.where(finished: true).count %>
+</p>
+<h3><%= @user.first_name %>'s Pet Posts:</h3>
+<ul>
+  <% @user.pets.each do |pet| %>
+    <li>
+      <p>Name: <%= pet.name %>
+        <% if pet.adopted %>
+          <strong>(Adopted)</strong>
+        <% end %>
+      </p>
+      <p><%= pet.description.truncate(70) %></p>
+      <p>Breed: <%= pet.breed %></p>
+      <%#if pet.adopted == false || policy(pet).update? %>
+        <%= link_to "See #{pet.name} Post", pet_path(pet) %>
+      <%#end %>
+    </li>
+    <hr>
+  <% end %>
+</ul>
+</div>
+</div>
+</div>

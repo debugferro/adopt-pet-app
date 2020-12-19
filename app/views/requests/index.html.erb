@@ -1,0 +1,21 @@
+<h1>Your Adoption Requests</h1>
+<hr>
+<% @requests.each do |request| %>
+  <!-- Getting request informations -->
+  <% pet_owner_first_name = request.pet.user.first_name %>
+  <% pet_owner_last_name = request.pet.user.last_name %>
+  <% pet_owner_full_name = "#{pet_owner_first_name} #{pet_owner_last_name}" %>
+  <% pet_name = request.pet.name %>
+  <% if request.finished %>
+    <% requisition_name = "=> Your request to #{pet_owner_full_name} to adopt #{pet_name} was accepted!" %>
+  <% elsif @all_requests.where(pet_id: request.pet.id, finished: true).first.present? %>
+    <% requisition_name = "=> Your request to #{pet_owner_full_name} to adopt #{pet_name} was not accepted!" %>
+  <% else %>
+    <% requisition_name = "=> You requested #{pet_owner_full_name} to adopt #{pet_name}" %>
+  <% end %>
+
+  <h1><%= requisition_name %></h1>
+  <%= link_to "Talk to #{pet_owner_full_name}", request_messages_path(request.id), class: "btn btn-secondary" %>
+  <%= link_to "See #{pet_name} Profile", pet_path(request.pet), class: "btn btn-secondary" %>
+  <hr>
+<% end %>
